@@ -1,0 +1,174 @@
+# =====================================================================
+# ROLLOUT SETTINGS: Change & AI Adoption Readiness Scorecard
+# =====================================================================
+# This one file describes the rollout being measured. To model a different
+# rollout (a new process, a new system), change this file, not the code.
+#
+# ALL DATA IN THIS PROJECT IS SYNTHETIC (MADE UP).
+# Monolith National Bank and AI Assistant HAL are fictional.
+# =====================================================================
+
+
+[rollout]
+organization  = "Monolith National Bank"
+change_name   = "AI Assistant HAL"
+change_type   = "AI tool"            # e.g., "AI tool", "system", "process"
+description   = "Company-wide rollout of a generative AI assistant to employees."
+synthetic_data = true                 # shown as a label on the dashboard and summary
+
+# Timeline. Weeks run Monday to Sunday.
+# Weeks 1-8 are the BASELINE (before go-live), used for "before" comparisons.
+# Weeks 9-20 are the ROLLOUT (after go-live).
+first_week_start = 2026-01-05         # Monday of week 1
+baseline_weeks   = 8                  # so go-live is the start of week 9 (2026-03-02)
+rollout_weeks    = 12                 # so the data ends week 20 (2026-05-24)
+
+
+[population]
+total_employees = 600                 # must equal the sum of department headcounts below
+random_seed     = 42                  # same seed = identical made-up data on every run
+
+
+# ---------------------------------------------------------------------
+# SCHEDULE: when communications, training and surveys happen.
+# Week numbers use the timeline above (go-live = week 9).
+# ---------------------------------------------------------------------
+[schedule]
+communication_weeks = [6, 8, 9, 12]   # announcement emails / manager talking points
+training_weeks      = [7, 8, 9, 10]   # training sessions offered
+training_required   = true            # true = mandatory (noncompliance escalated to skip-level
+                                      # managers); false = optional training
+training_deadline_week = 10           # training must be completed by the end of this week
+survey_weeks        = [8, 14, 20]     # readiness pulse: just before go-live, mid-rollout, end
+
+
+# ---------------------------------------------------------------------
+# DEPARTMENTS
+# headcount        number of employees
+# outcome_metric   the business result we expect the change to move
+# outcome_unit     unit of that metric
+# better_when      "lower" or "higher": which direction counts as improvement
+# outcome_baseline typical value BEFORE go-live
+#
+# test_pattern     FOR THE DATA GENERATOR ONLY. Each department gets a deliberate
+#                  pattern so we can check the scorecard detects it. The metric
+#                  calculations never read this field: they have to find the
+#                  pattern from the data, the way they would with real data.
+# ---------------------------------------------------------------------
+[[departments]]
+name             = "Contact Center"
+headcount        = 180
+outcome_metric   = "Average handle time"
+outcome_unit     = "seconds"
+better_when      = "lower"
+outcome_baseline = 450                # 7.5 minutes
+test_pattern     = "strong_adopter"   # trained, positive, high usage, outcome improves
+
+[[departments]]
+name             = "Branch Operations"
+headcount        = 120
+outcome_metric   = "Transaction processing time"
+outcome_unit     = "minutes"
+better_when      = "lower"
+outcome_baseline = 12.0
+test_pattern     = "late_completers"  # short-staffed floor: many finish training only after
+                                      # the deadline and escalation, and adoption lags
+
+[[departments]]
+name             = "Lending"
+headcount        = 90
+outcome_metric   = "Application processing time"
+outcome_unit     = "days"
+better_when      = "lower"
+outcome_baseline = 9.0
+test_pattern     = "trained_but_skeptical"  # well trained, but low confidence; usage stalls
+
+[[departments]]
+name             = "Deposit Operations"
+headcount        = 90
+outcome_metric   = "Processing error rate"
+outcome_unit     = "percent"
+better_when      = "lower"
+outcome_baseline = 2.4
+test_pattern     = "usage_without_outcomes" # high usage, but the business result doesn't move
+
+[[departments]]
+name             = "Fraud & Disputes"
+headcount        = 70
+outcome_metric   = "Case resolution time"
+outcome_unit     = "days"
+better_when      = "lower"
+outcome_baseline = 6.0
+test_pattern     = "slow_start_recovering"  # weak first weeks, then catches up
+
+[[departments]]
+name             = "Risk & Compliance"
+headcount        = 50
+outcome_metric   = "Quality review score"
+outcome_unit     = "points (0-100)"
+better_when      = "higher"
+outcome_baseline = 88.0
+test_pattern     = "middle_of_the_road"     # moderate on everything
+
+
+# ---------------------------------------------------------------------
+# RED / AMBER / GREEN RULES
+# One headline metric per measure decides the color for each department.
+#   value >= green  -> GREEN
+#   value >= amber  -> AMBER
+#   otherwise       -> RED
+# These are SUGGESTED STARTING POINTS for this scenario, not industry
+# standards. Adjust them to the organization's goals.
+# ---------------------------------------------------------------------
+[thresholds.reach]
+headline   = "On-time training completion rate"
+definition = "Percent of eligible employees who completed training by the deadline. Eligible = not on leave of absence (LOA = FALSE) during the training window (training_weeks). Employees with LOA = TRUE are excluded from both the numerator and the denominator, and are reported separately as a count. Employees who complete after the deadline count as late, not on time."
+# Thresholds assume MANDATORY training (training_required = true), where
+# completion is near-universal and escalation follows any miss. For optional
+# training, much lower thresholds would apply.
+green = 97.0
+amber = 90.0
+
+[thresholds.readiness]
+# Surveys are OPTIONAL and use a 7-point scale (1 = strongly disagree,
+# 7 = strongly agree). A 6 or 7 counts as favorable ("pass").
+scale_points      = 7
+favorable_minimum = 6
+
+headline   = "Percent favorable"
+definition = "Percent of survey answers scored 6 or 7 on a 1-7 scale, latest survey wave. Eligible = not on leave of absence (LOA = FALSE) during the survey week."
+green = 85.0
+amber = 65.0
+
+# Because surveys are optional, a score from few respondents may not represent
+# the department. The color still shows, but with a low-response caution note,
+# if under this percent of eligible employees responded to the latest wave:
+low_response_rate = 50.0
+
+[thresholds.adoption]
+# Use isn't formally required, but it appears on each employee's performance
+# scorecard, so nearly everyone meets the minimum. Three levels, each measured
+# over a ROLLING 30-CALENDAR-DAY WINDOW:
+#   Not using  = 0 prompts                         (missed expectation)
+#   Using      = at least minimum_prompts prompts  (meets expectations)
+#   Heavy use  = at least heavy_use_active_days    (exceeds expectations)
+#                different days with 1+ prompt
+# Eligible = not on leave of absence (LOA = FALSE) during the window.
+window_days           = 30
+minimum_prompts       = 1
+heavy_use_active_days = 5
+
+headline   = "Heavy-user rate"
+definition = "Percent of eligible employees with prompts on 5 or more different days in the rolling 30-day window, measured at the end of the final week."
+green = 60.0
+amber = 40.0
+
+# Minimum-use gate: if fewer than this percent of eligible employees meet the
+# 1-prompt minimum, the department is RED regardless of its heavy-user rate.
+minimum_use_gate = 97.0   # same bar as on-time training
+
+[thresholds.outcomes]
+headline = "Improvement vs. baseline"
+definition = "Percent change in the outcome metric from the baseline average to the last 4 weeks, counted as positive when it moves in the 'better' direction."
+green = 10.0
+amber = 3.0

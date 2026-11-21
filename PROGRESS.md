@@ -69,8 +69,21 @@ readiness-scorecard/
 - [ ] `requirements.txt` (added in Step 4 when pytest is needed)
 
 ### Step 1: Rollout settings file
-- [ ] `rollout_config.toml`: fictional company, AI tool name, timeline (baseline weeks + rollout weeks), departments, RAG thresholds
-- Check: Audrey can read it and explain every setting
+- [x] `rollout_config.toml` drafted (2026-11-21); parse check passed: dates line up, headcounts sum to 600
+- [x] Revised from Audrey's review: training is mandatory (escalated to skip-levels), so Reach = on-time completion
+      among eligible employees; LOA = TRUE during training window excluded from numerator and denominator
+      and shown as a count; green ≥ 97%, amber ≥ 90%; Branch Operations pattern → "late_completers"
+- [x] Adoption revised from Audrey's review: use appears on employee scorecards, so 1 prompt in a rolling
+      30 days = "using" (meets); 5+ active days in rolling 30 days = "heavy use" (exceeds). Color = heavy-user
+      rate; minimum-use gate (< 97% meeting minimum → red). Generator must produce DAILY usage.
+- [x] Adoption numbers confirmed: heavy-user green ≥ 60%, amber ≥ 40%; minimum-use gate 97%
+- [x] Readiness thresholds set by Audrey: percent favorable green ≥ 85%, amber ≥ 65%
+- [x] Readiness revised from Audrey's review: surveys optional, 7-point scale, favorable = 6 or 7
+- [x] Low-response caution: response rate < 50% of eligible employees (10-person minimum removed by Audrey)
+- [x] Outcomes reviewed: metrics and thresholds (green ≥ 10%, amber ≥ 3%) approved; AHT changed to seconds (450)
+- [x] Step 1 complete and committed
+- Open: employees returning from LOA after the deadline. For now they are excluded from this rate;
+  a separate later due date could be added later
 
 ### Step 2: Synthetic data generator
 - [ ] Employees and departments
@@ -118,13 +131,14 @@ readiness-scorecard/
 - **Departments:** Contact Center, Branch Operations, Lending, Deposit Operations, Fraud & Disputes, Risk & Compliance
 
 ## Still open
-- RAG thresholds: proposed defaults to be set in Step 1, then adjusted together
+- Employees returning from LOA after the training deadline (currently excluded; see Step 1)
 
 ## Done
 - 2026-11-21: Read project plan, proposed structure, created PROGRESS.md
 - 2026-11-21: Installed Python 3.13.17 (winget, user scope)
 
 - 2026-11-21: Plan decisions made; Git set up; folders created; first commit
+- 2026-11-21: Step 1 done: `rollout_config.toml` reviewed and revised to match real bank practice
 
 ## Next
-- Step 1: write `rollout_config.toml` (bank, HAL, timeline, departments, proposed RAG thresholds)
+- Step 2: synthetic data generator (daily usage, LOA flags, 7-point surveys, training deadline/late completions)
