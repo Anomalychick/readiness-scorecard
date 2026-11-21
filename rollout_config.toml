@@ -32,13 +32,20 @@ random_seed     = 42                  # same seed = identical made-up data on ev
 # ---------------------------------------------------------------------
 # SCHEDULE: when communications, training and surveys happen.
 # Week numbers use the timeline above (go-live = week 9).
+# The tool goes live BEFORE anyone is trained: everyone has access from
+# week 9, and training runs in the weeks after go-live.
 # ---------------------------------------------------------------------
 [schedule]
-communication_weeks = [6, 8, 9, 12]   # announcement emails / manager talking points
-training_weeks      = [7, 8, 9, 10]   # training sessions offered
+communication_weeks = [9, 10, 12, 15] # emails sent in these weeks, in this order:
+communication_types = ["go_live_announcement", "training_invitation", "training_reminder", "tips_and_best_practices"]
+# The training registration link is in the training invitation AND the training
+# reminder, so an employee must OPEN one of those two emails before they can
+# register for training.
+registration_link_in = ["training_invitation", "training_reminder"]
+training_weeks      = [10, 11, 12, 13] # training sessions offered (all after go-live)
 training_required   = true            # true = mandatory (noncompliance escalated to skip-level
                                       # managers); false = optional training
-training_deadline_week = 10           # training must be completed by the end of this week
+training_deadline_week = 13           # training must be completed by the end of this week
 survey_weeks        = [8, 14, 20]     # readiness pulse: just before go-live, mid-rollout, end
 
 
@@ -49,6 +56,9 @@ survey_weeks        = [8, 14, 20]     # readiness pulse: just before go-live, mi
 # outcome_unit     unit of that metric
 # better_when      "lower" or "higher": which direction counts as improvement
 # outcome_baseline typical value BEFORE go-live
+# volume_unit      the work behind each outcome value (e.g., calls handled)
+# weekly_volume    typical volume per employee per full week; used to weight
+#                  department averages
 #
 # test_pattern     FOR THE DATA GENERATOR ONLY. Each department gets a deliberate
 #                  pattern so we can check the scorecard detects it. The metric
@@ -62,6 +72,8 @@ outcome_metric   = "Average handle time"
 outcome_unit     = "seconds"
 better_when      = "lower"
 outcome_baseline = 450                # 7.5 minutes
+volume_unit      = "calls handled"
+weekly_volume    = 160
 test_pattern     = "strong_adopter"   # trained, positive, high usage, outcome improves
 
 [[departments]]
@@ -71,6 +83,8 @@ outcome_metric   = "Transaction processing time"
 outcome_unit     = "minutes"
 better_when      = "lower"
 outcome_baseline = 12.0
+volume_unit      = "transactions processed"
+weekly_volume    = 120
 test_pattern     = "late_completers"  # short-staffed floor: many finish training only after
                                       # the deadline and escalation, and adoption lags
 
@@ -81,6 +95,8 @@ outcome_metric   = "Application processing time"
 outcome_unit     = "days"
 better_when      = "lower"
 outcome_baseline = 9.0
+volume_unit      = "applications processed"
+weekly_volume    = 8
 test_pattern     = "trained_but_skeptical"  # well trained, but low confidence; usage stalls
 
 [[departments]]
@@ -90,6 +106,8 @@ outcome_metric   = "Processing error rate"
 outcome_unit     = "percent"
 better_when      = "lower"
 outcome_baseline = 2.4
+volume_unit      = "items processed"
+weekly_volume    = 350
 test_pattern     = "usage_without_outcomes" # high usage, but the business result doesn't move
 
 [[departments]]
@@ -99,6 +117,8 @@ outcome_metric   = "Case resolution time"
 outcome_unit     = "days"
 better_when      = "lower"
 outcome_baseline = 6.0
+volume_unit      = "cases resolved"
+weekly_volume    = 15
 test_pattern     = "slow_start_recovering"  # weak first weeks, then catches up
 
 [[departments]]
@@ -108,6 +128,8 @@ outcome_metric   = "Quality review score"
 outcome_unit     = "points (0-100)"
 better_when      = "higher"
 outcome_baseline = 88.0
+volume_unit      = "reviews completed"
+weekly_volume    = 25
 test_pattern     = "middle_of_the_road"     # moderate on everything
 
 
@@ -147,12 +169,14 @@ low_response_rate = 50.0
 
 [thresholds.adoption]
 # Use isn't formally required, but it appears on each employee's performance
-# scorecard, so nearly everyone meets the minimum. Three levels, each measured
-# over a ROLLING 30-CALENDAR-DAY WINDOW:
-#   Not using  = 0 prompts                         (missed expectation)
-#   Using      = at least minimum_prompts prompts  (meets expectations)
-#   Heavy use  = at least heavy_use_active_days    (exceeds expectations)
-#                different days with 1+ prompt
+# scorecard, so nearly everyone meets the minimum. Three ratings, each measured
+# over a ROLLING 30-CALENDAR-DAY WINDOW. "Active day" = a day with 1+ prompt.
+#   Not using  = 0 active days     (missed expectation)
+#   Meets      = 1-4 active days   (meets expectations)
+#   Exceeds    = 5+ active days    (exceeds expectations; "heavy use")
+# Ratings are shown per employee and as a mix per department. The department
+# color uses only the Exceeds share and the minimum-use gate (below).
+# Employees CAN use the tool before they complete training (access is not gated).
 # Eligible = not on leave of absence (LOA = FALSE) during the window.
 window_days           = 30
 minimum_prompts       = 1
@@ -168,6 +192,11 @@ amber = 40.0
 minimum_use_gate = 97.0   # same bar as on-time training
 
 [thresholds.outcomes]
+# Outcomes are recorded PER EMPLOYEE PER WEEK, with the work volume behind each
+# value (e.g., calls handled, applications processed). Department values are
+# volume-weighted, so an employee with 5 calls doesn't count as much as one
+# with 500. This allows breakdowns by employee and department, including
+# comparing outcome change across adoption ratings.
 headline = "Improvement vs. baseline"
 definition = "Percent change in the outcome metric from the baseline average to the last 4 weeks, counted as positive when it moves in the 'better' direction."
 green = 10.0

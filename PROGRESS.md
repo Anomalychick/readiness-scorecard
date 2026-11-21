@@ -86,14 +86,20 @@ readiness-scorecard/
   a separate later due date could be added later
 
 ### Step 2: Synthetic data generator
-- [ ] Employees and departments
-- [ ] Communications and training records
-- [ ] Survey responses (scores + open-ended comments)
-- [ ] Weekly usage logs
-- [ ] Outcome metrics before and after
-- [ ] Planted "stories": each department gets a deliberate pattern (e.g., strong adopter; low training reach → low adoption; trained but negative sentiment; high usage but no outcome gain) so we can check that the scorecard finds them
-- [ ] Fixed random seed, so numbers are identical every run
-- Check: row counts, value ranges, totals make sense; spot-check a few employees by hand
+- [x] `src/generate_data.py` written (2026-11-21); writes 7 CSVs to `data/`:
+      employees 600 · communications 2,400 · training 600 · surveys 4,296 answers ·
+      survey_comments 324 · usage 9,719 active days · outcomes 11,884 employee-weeks
+- [x] Added `volume_unit` / `weekly_volume` per department to `rollout_config.toml` (for volume-weighting)
+- [x] Added a "scorecard floor": users send a quick prompt every 15–27 days, so box-checkers meet the minimum
+- [x] Planted patterns verified with a rough check script (Claude's scratchpad, not the project):
+      Contact Center GGGG · Branch Ops RARR (heavy-user rate amber, but 94.8% minimum use → gate makes it red;
+      32% survey response → low-response caution) · Lending GRRR · Deposit Ops GGGR · Fraud & Disputes AAGA ·
+      Risk & Compliance AAAA  (Reach / Readiness / Adoption / Outcomes)
+- [x] 14 business-rule checks pass (e.g., nobody registered without opening a link email; no usage before go-live
+      or while on LOA; scores 1–7). These become the Step 4 pytest tests.
+- [x] Fixed seed confirmed: re-running gives byte-identical files
+- [x] Generator run and spot-checked (E0182, Branch Ops: opened invitation, registered after reminder,
+      completed 1 day late), then committed
 
 ### Step 3: Database + SQL metrics
 - [ ] Load data into SQLite
@@ -133,12 +139,34 @@ readiness-scorecard/
 ## Still open
 - Employees returning from LOA after the training deadline (currently excluded; see Step 1)
 
+## Step 2 design rules (from Audrey's review)
+- Training registration link is in the invitation (week 6) and the reminder (week 8): nobody can register
+  without opening one of them. Training table records assigned → registered → completed; registered date must
+  be on/after the earliest open of either email.
+  Validation test: zero employees registered or completed without an opened invitation or reminder.
+- Usage is a continuous spread, not two clusters. Active days (rolling 30) sets the rating; prompts per active day
+  is detail only. Three ratings: Not using (0), Meets (1–4), Exceeds (5+). (An in-between rating was
+  considered and dropped by Audrey.)
+  Department color still = Exceeds share + 97% minimum-use gate. Dashboard gets an active-days distribution chart.
+- Outcomes recorded per employee per week with work volume; department values are volume-weighted.
+  Breakdowns by employee and by department, incl. outcome change by adoption rating.
+- Before/after comparisons two ways: (1) before vs. after go-live (department baseline), and (2) before vs. after
+  EACH EMPLOYEE'S OWN training completion date, rolled up by department.
+- HAL access is NOT gated by training, and HAL goes live BEFORE anyone trains. Schedule revised:
+  go-live + announcement wk 9 (2026-03-02) → invitation wk 10 → training wks 10–13 → reminder wk 12 →
+  deadline end of wk 13 (2026-04-05) → tips email wk 15. Surveys stay wks 8, 14, 20.
+  Every employee has untrained usage first, so usage and outcomes get compared before vs. after each
+  employee's own training date.
+- Interview caveat: scorecard shows where the reach → readiness → adoption → outcomes chain breaks; it is
+  monitoring, not a controlled experiment, so links line up but don't prove cause.
+
 ## Done
 - 2026-11-21: Read project plan, proposed structure, created PROGRESS.md
 - 2026-11-21: Installed Python 3.13.17 (winget, user scope)
 
 - 2026-11-21: Plan decisions made; Git set up; folders created; first commit
 - 2026-11-21: Step 1 done: `rollout_config.toml` reviewed and revised to match real bank practice
+- 2026-11-21: Step 2 done: synthetic data generator written, verified and committed
 
 ## Next
-- Step 2: synthetic data generator (daily usage, LOA flags, 7-point surveys, training deadline/late completions)
+- Step 3: load into SQLite + the four SQL metric files
