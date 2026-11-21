@@ -1,0 +1,25 @@
+# Generated data: re-created by running the pipeline, so not stored in Git
+data/*
+!data/.gitkeep
+*.db
+*.sqlite
+
+# Python temporary files
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Virtual environments
+.venv/
+venv/
+
+# Secrets and local settings (never commit)
+.env
+.claude/settings.local.json
+
+# Editor and OS clutter
+.vscode/
+.idea/
+Thumbs.db
+desktop.ini
+.DS_Store
