@@ -145,6 +145,9 @@ test_pattern     = "middle_of_the_road"     # moderate on everything
 [thresholds.reach]
 headline   = "On-time training completion rate"
 definition = "Percent of eligible employees who completed training by the deadline. Eligible = not on leave of absence (LOA = FALSE) during the training window (training_weeks). Employees with LOA = TRUE are excluded from both the numerator and the denominator, and are reported separately as a count. Employees who complete after the deadline count as late, not on time."
+# LOA exclusion applies even to employees who completed on time before their
+# leave began: someone on leave during the window has no full performance
+# record for that period, so they are left out entirely (Audrey's decision).
 # Thresholds assume MANDATORY training (training_required = true), where
 # completion is near-universal and escalation follows any miss. For optional
 # training, much lower thresholds would apply.
@@ -197,6 +200,7 @@ minimum_use_gate = 97.0   # same bar as on-time training
 # volume-weighted, so an employee with 5 calls doesn't count as much as one
 # with 500. This allows breakdowns by employee and department, including
 # comparing outcome change across adoption ratings.
+comparison_weeks = 4      # "recent" = the last 4 weeks of data, compared with the baseline weeks
 headline = "Improvement vs. baseline"
 definition = "Percent change in the outcome metric from the baseline average to the last 4 weeks, counted as positive when it moves in the 'better' direction."
 green = 10.0

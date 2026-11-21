@@ -102,10 +102,20 @@ readiness-scorecard/
       completed 1 day late), then committed
 
 ### Step 3: Database + SQL metrics
-- [ ] Load data into SQLite
-- [ ] Write the four SQL files, one per measure, by department and by week
-- [ ] Red/amber/green rules applied from the settings file
-- Check: hand-calculate 2–3 metrics in a spreadsheet and compare; confirm planted stories show up
+- [x] `src/load_database.py`: builds `data/scorecard.db` (7 raw tables + departments, settings, calendar,
+      survey_schedule). SQL reads every date/threshold from the one-row `settings` table. `test_pattern` is NOT loaded.
+- [x] SQL files (each creates views): `01_reach.sql`, `02_readiness.sql`, `03_adoption.sql`, `04_outcomes.sql`,
+      plus `05_scorecard.sql` joining the four headlines
+- [x] Breakdowns by employee and department; before vs. after go-live AND before vs. after each employee's own
+      training date (usage and outcomes); outcome change by adoption rating; rolling 30-day adoption trend
+- [x] Red/amber/green rules + minimum-use gate + low-response caution applied in SQL from settings
+- [x] `src/calculate_metrics.py`: runs the SQL, prints the scorecard, exports all 20 views to `output/metrics/*.csv`
+- [x] SQL results match the independent Python check exactly; all 6 departments get their planned colors
+- [x] Added `comparison_weeks = 4` to settings; `output/metrics/` added to .gitignore
+- [x] Hand check 1 (Branch Ops on-time 90 ÷ 116 = 77.6%): Audrey got 94 incl. the 4 on leave → 90 after
+      excluding them. Matches. Decision confirmed: LOA during the window is excluded even if they finished
+      on time, because there's no full performance record for that period.
+- [x] Committed (hand check 2, Lending heavy users 17 ÷ 89, skipped for now; can do anytime)
 
 ### Step 4: Validation tests
 - [ ] pytest checks: no negative counts, rates between 0–100%, completions ≤ enrollments, every employee in exactly one department, etc.
@@ -167,6 +177,7 @@ readiness-scorecard/
 - 2026-11-21: Plan decisions made; Git set up; folders created; first commit
 - 2026-11-21: Step 1 done: `rollout_config.toml` reviewed and revised to match real bank practice
 - 2026-11-21: Step 2 done: synthetic data generator written, verified and committed
+- 2026-11-21: Step 3 done: SQLite database + SQL metric views; scorecard matches planned colors; hand check passed
 
 ## Next
-- Step 3: load into SQLite + the four SQL metric files
+- Step 4: pytest validation tests

@@ -3,6 +3,7 @@ data/*
 !data/.gitkeep
 *.db
 *.sqlite
+output/metrics/
 
 # Python temporary files
 __pycache__/
