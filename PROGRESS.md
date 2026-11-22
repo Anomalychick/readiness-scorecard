@@ -221,8 +221,9 @@ readiness-scorecard/
 - 2026-11-21: Step 6 done: rule-based findings summary + "Where to act" on dashboard; playbook from Audrey; 72 tests pass
 
 - 2026-11-21: Step 7 done: README + preview + Pages entry point; pushed to GitHub; live dashboard on GitHub Pages
+- 2026-11-21: Resume Projects entry (title + link line + 5 bullets) added first under PROJECTS in both v36 masters
+  (General, Real Estate); PDFs re-exported from Word
 
 ## Next
 - Audrey: click through the live dashboard (and on a phone) and note anything to fix
-- Resume entry for the v36 masters (only now that the project is done; no "I/she/her"; never claim Codex)
 - Optional: hand check 2 (Lending heavy users 17 ÷ 89); stretch goals above
