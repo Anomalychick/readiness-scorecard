@@ -56,6 +56,8 @@ def main():
 
     data = {
         "meta": {
+            "author": cfg.get("project", {}).get("author", ""),
+            "github_username": cfg.get("project", {}).get("github_username", ""),
             "organization": settings["organization"],
             "change_name": settings["change_name"],
             "change_type": cfg["rollout"]["change_type"],

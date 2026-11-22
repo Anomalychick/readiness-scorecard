@@ -161,8 +161,16 @@ readiness-scorecard/
 - [x] Audrey reviewed and approved; committed
 
 ### Step 7: README + GitHub
-- [ ] README: business problem, the four measures and how each is calculated, how to run, synthetic-data notice
-- [ ] Push to GitHub (walk through Git basics along the way)
+- Decisions (Audrey): create a GitHub account (none yet); keep anomalychic@gmail.com on public commits;
+  credit = name + GitHub link; publish the dashboard with GitHub Pages
+- [x] README.md: business problem, findings table, measures + thresholds, bank-practice design choices,
+      how it's built, how to run, structure, synthetic-data notice, credit (GITHUB_USERNAME placeholder)
+- [x] docs/scorecard-preview.png (README image); index.html at root redirects Pages visitors to the dashboard
+- [x] `[project]` author + github_username in settings; dashboard credit reads from it (72 tests pass)
+- [ ] Audrey creates GitHub account → fill in username (README + settings) → commit
+- [ ] Create empty public repo `readiness-scorecard` on github.com → `git remote add` → `git push`
+      (Git Credential Manager opens a browser to sign in)
+- [ ] Turn on GitHub Pages (Settings → Pages → Deploy from branch → main / root); check the live link
 
 ### Stretch (only if time allows)
 - [ ] AI theme sorting for open-ended comments, with a human-reviewed validation sample
@@ -214,4 +222,5 @@ readiness-scorecard/
 - 2026-11-21: Step 6 done: rule-based findings summary + "Where to act" on dashboard; playbook from Audrey; 72 tests pass
 
 ## Next
-- Step 7: README + GitHub
+- Audrey: create GitHub account, send username
+- Then: fill in username, commit, create repo, push, turn on Pages

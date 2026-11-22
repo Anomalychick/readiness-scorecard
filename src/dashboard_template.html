@@ -253,7 +253,7 @@ footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--grid);
     </div>
     <div class="card">
       <h3>How it was built</h3>
-      <p class="small">Built with <strong>Claude Code</strong>: requirements, review, testing and every business rule directed by the author.</p>
+      <p class="small" id="credit">Built with <strong>Claude Code</strong>: requirements, review, testing and every business rule directed by the author.</p>
       <div class="stack">
         <span class="chip">Python 3 (standard library)</span>
         <span class="chip">SQLite + SQL views</span>
@@ -388,6 +388,13 @@ $("lede").textContent =
   `${M.organization} rolled out ${M.change_name}, a generative AI assistant, to ${M.employees} employees in ${DEPTS.length} departments. ` +
   `The tool went live ${fmtDate(M.go_live_date)}; mandatory training was due ${fmtDate(M.training_deadline_date)}; data runs to ${fmtDate(M.data_end_date)}.`;
 $("footOrg").textContent = M.organization;
+if (M.author) {
+  const who = M.github_username
+    ? `<a href="https://github.com/${esc(M.github_username)}" style="color:var(--accent-ink)">${esc(M.author)}</a>`
+    : esc(M.author);
+  $("credit").innerHTML = `Built by <strong>${who}</strong> with <strong>Claude Code</strong>: requirements, ` +
+    `every business rule, review and testing directed by the author.`;
+}
 
 // ---------- scorecard ----------
 (function renderScorecard() {

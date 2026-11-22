@@ -9,6 +9,11 @@
 # =====================================================================
 
 
+[project]
+author          = "Audrey Apelbaum"
+github_username = "Anomalychick"
+
+
 [rollout]
 organization  = "Monolith National Bank"
 change_name   = "AI Assistant HAL"
