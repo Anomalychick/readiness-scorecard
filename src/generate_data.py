@@ -191,7 +191,12 @@ def clamp(x, low=0.0, high=1.0):
 
 
 def write_csv(name, rows, fields):
-    with open(DATA_DIR / name, "w", newline="", encoding="utf-8") as f:
+    try:
+        f = open(DATA_DIR / name, "w", newline="", encoding="utf-8")
+    except PermissionError:
+        raise SystemExit(f"Can't write data/{name}: it's probably open in Excel. "
+                         "Close it and run again.") from None
+    with f:
         writer = csv.DictWriter(f, fieldnames=fields)
         writer.writeheader()
         writer.writerows(rows)

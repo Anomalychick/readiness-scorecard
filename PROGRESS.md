@@ -118,7 +118,17 @@ readiness-scorecard/
 - [x] Committed (hand check 2, Lending heavy users 17 ÷ 89, skipped for now; can do anytime)
 
 ### Step 4: Validation tests
-- [ ] pytest checks: no negative counts, rates between 0–100%, completions ≤ enrollments, every employee in exactly one department, etc.
+- [x] pytest 9.2.0 installed; `requirements.txt` and `pytest.ini` added
+- [x] `tests/conftest.py`: rebuilds everything (generate → load → metrics) before tests run
+- [x] `tests/test_data_rules.py`: 25 business rules as SQL violation counts + headcount + same-seed reproducibility
+- [x] `tests/test_metrics.py`: rates 0–100, counts add up, LOA never eligible, colors follow thresholds and gate,
+      low-response flag, 3 headline numbers recalculated independently in Python, planted patterns detected
+- [x] All 55 tests pass (`python -m pytest`)
+- [x] Generator now gives a plain message if a CSV is open in Excel (Windows file lock) instead of a crash
+- [x] Audrey ran the tests herself: 55 passed
+- [x] Break-it test: Audrey changed reach green 97 → 99; `test_scorecard_detects_planted_patterns` failed on
+      Deposit Operations (98.9% → Amber) while `test_colors_follow_thresholds` still passed (logic correct,
+      expected result changed). Reverted; 55 pass again. Committed.
 
 ### Step 5: Dashboard
 - [ ] One-page HTML: scorecard grid (department × measure with RAG colors), adoption trend over time, before/after outcomes
@@ -178,6 +188,7 @@ readiness-scorecard/
 - 2026-11-21: Step 1 done: `rollout_config.toml` reviewed and revised to match real bank practice
 - 2026-11-21: Step 2 done: synthetic data generator written, verified and committed
 - 2026-11-21: Step 3 done: SQLite database + SQL metric views; scorecard matches planned colors; hand check passed
+- 2026-11-21: Step 4 done: 55 pytest tests; Audrey ran them and confirmed they catch a deliberate threshold change
 
 ## Next
-- Step 4: pytest validation tests
+- Step 5: dashboard
