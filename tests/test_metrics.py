@@ -190,11 +190,11 @@ def test_outcome_improvement_recalculated_in_python(db, config):
 # Expected colors (Reach, Readiness, Adoption, Outcomes) for each planted pattern.
 PLANTED = {
     "strong_adopter":         ("Green", "Green", "Green", "Green"),
-    "late_completers":        ("Red",   "Amber", "Red",   "Red"),
+    "late_completers":        ("Red",   "Amber", "Red",   "Amber"),
     "trained_but_skeptical":  ("Green", "Red",   "Red",   "Red"),
     "usage_without_outcomes": ("Green", "Green", "Green", "Red"),
-    "slow_start_recovering":  ("Amber", "Amber", "Green", "Amber"),
-    "middle_of_the_road":     ("Amber", "Amber", "Amber", "Amber"),
+    "slow_start_recovering":  ("Amber", "Amber", "Green", "Green"),
+    "middle_of_the_road":     ("Amber", "Amber", "Amber", "Green"),
 }
 
 

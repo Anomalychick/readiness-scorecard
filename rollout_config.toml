@@ -203,5 +203,5 @@ minimum_use_gate = 97.0   # same bar as on-time training
 comparison_weeks = 4      # "recent" = the last 4 weeks of data, compared with the baseline weeks
 headline = "Improvement vs. baseline"
 definition = "Percent change in the outcome metric from the baseline average to the last 4 weeks, counted as positive when it moves in the 'better' direction."
-green = 10.0
-amber = 3.0
+green = 7.5       # lowered from 10 by Audrey: 7.5%+ in 12 weeks is a real win
+amber = 2.5       # lowered from 3 by Audrey

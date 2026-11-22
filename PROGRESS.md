@@ -131,9 +131,21 @@ readiness-scorecard/
       expected result changed). Reverted; 55 pass again. Committed.
 
 ### Step 5: Dashboard
-- [ ] One-page HTML: scorecard grid (department × measure with RAG colors), adoption trend over time, before/after outcomes
-- [ ] "Synthetic data" label visible on the page
-- Check: open in browser, numbers match SQL results
+- Decisions (Audrey): audience = portfolio/recruiter (project story first, then scorecard); department charts +
+  filterable employee table; RAG cells show tint + value + icon + word (readable without color)
+- [x] `src/build_dashboard.py` + `src/dashboard_template.html` → `output/dashboard.html` (single file, Chart.js 4.4.1 via CDN)
+- [x] Sections: about (problem, bank-practice rules, how built) → scorecard → training effect (usage + outcomes
+      before/after own training) → outcome by adoption rating (with causation caveat) → department detail cards
+      (heavy-user trend, % favorable by survey, active-days distribution, weekly outcome with go-live line)
+      → methods (from settings) → employee table (filter/sort, 600 rows) → synthetic-data footer
+- [x] Light + dark mode, "Show as table" for each main chart, sticky department column on narrow screens
+- [x] Rendered and checked with headless Edge; fixed card overflow and skipped axis labels
+- [x] `run_all.py` runs the whole pipeline; 4 dashboard tests added (59 total, all pass)
+- [x] Audrey's review: too much red → outcome thresholds lowered to green ≥ 7.5%, amber ≥ 2.5% (were 10 / 3).
+      Fraud & Disputes and Risk & Compliance outcomes → Green; Branch Ops outcomes → Amber. Red cells 7 → 6.
+      Planted-pattern test expectations updated to match. 59 tests pass.
+- Note: Branch Ops outcome is 2.51%, just 0.01 above the amber line. Any change to the generator could flip it.
+- [x] Committed (Branch Ops borderline left as is)
 
 ### Step 6: Findings summary
 - [ ] Rule-based write-up: where it's working, where it isn't, recommended next action per department
@@ -189,6 +201,7 @@ readiness-scorecard/
 - 2026-11-21: Step 2 done: synthetic data generator written, verified and committed
 - 2026-11-21: Step 3 done: SQLite database + SQL metric views; scorecard matches planned colors; hand check passed
 - 2026-11-21: Step 4 done: 55 pytest tests; Audrey ran them and confirmed they catch a deliberate threshold change
+- 2026-11-21: Step 5 done: HTML dashboard + run_all.py; outcome thresholds lowered to 7.5 / 2.5; 59 tests pass
 
 ## Next
-- Step 5: dashboard
+- Step 6: findings summary (and add it to the dashboard)

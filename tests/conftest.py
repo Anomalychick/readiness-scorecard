@@ -48,6 +48,7 @@ def pipeline_run():
     second = data_fingerprint()
     load_module("load_database").main()
     load_module("calculate_metrics").main()
+    load_module("build_dashboard").main()
     return first, second
 
 
