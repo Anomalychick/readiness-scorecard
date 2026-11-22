@@ -134,6 +134,35 @@ test_pattern     = "middle_of_the_road"     # moderate on everything
 
 
 # ---------------------------------------------------------------------
+# PLAYBOOK: recommended actions for each problem the summary can detect.
+# The findings summary (src/write_summary.py) checks the data for each
+# problem and, when it finds one, recommends these actions.
+# Chosen by Audrey from bank practice. below_minimum and on_track were
+# drafted by Claude Code and approved by Audrey.
+# ---------------------------------------------------------------------
+[playbook]
+late_training = [
+  "Protected training time: schedule coverage so staff can step away to train, and block the time on calendars.",
+  "Manager accountability: send managers a weekly completion list before the deadline, not only the escalation after it.",
+]
+low_confidence = [
+  "Role-specific use cases: show concrete examples from this department's own work, not generic demos.",
+]
+use_without_results = [
+  "Review how it's used: sample how employees use the tool to see whether it's applied to the work that drives this outcome.",
+]
+low_response = [
+  "Manager follow-up: managers encourage survey completion, without seeing individual answers.",
+]
+below_minimum = [   # extends Audrey's manager-accountability choice
+  "Manager accountability: give managers the list of employees with no prompts in the last 30 days.",
+]
+on_track = [
+  "Share what's working: have this department show others how they use the tool.",
+]
+
+
+# ---------------------------------------------------------------------
 # RED / AMBER / GREEN RULES
 # One headline metric per measure decides the color for each department.
 #   value >= green  -> GREEN

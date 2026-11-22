@@ -12,12 +12,19 @@ no calculating of its own, only selecting and formatting.
 Run from the project folder:   python src/build_dashboard.py
 """
 
+import importlib.util
 import json
 import sqlite3
 import tomllib
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
+
+# Reuse the findings rules from write_summary.py so the dashboard and the
+# written summary always say the same thing.
+_spec = importlib.util.spec_from_file_location("write_summary", ROOT / "src" / "write_summary.py")
+write_summary = importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(write_summary)
 DB_PATH = ROOT / "data" / "scorecard.db"
 TEMPLATE = ROOT / "src" / "dashboard_template.html"
 OUTPUT = ROOT / "output" / "dashboard.html"
@@ -45,6 +52,7 @@ def main():
 
     settings = rows(con, "SELECT * FROM settings")[0]
     th = cfg["thresholds"]
+    findings = write_summary.build_findings(con, cfg)
 
     data = {
         "meta": {
@@ -67,6 +75,8 @@ def main():
                             "low_response_rate", "heavy_use_active_days", "favorable_minimum")}
             for name, t in th.items()
         },
+        "findings": findings,
+        "overview": write_summary.overview(con, findings),
         "departments": rows(con, "SELECT * FROM departments ORDER BY sort_order"),
         "scorecard": rows(con, "SELECT * FROM scorecard ORDER BY sort_order"),
         "reach": rows(con, ordered("reach_by_department")),

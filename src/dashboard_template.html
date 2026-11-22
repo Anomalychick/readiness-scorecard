@@ -163,6 +163,22 @@ details.table-view summary { cursor: pointer; color: var(--text-secondary); }
 .grid-2 > *, .grid-3 > *, .dept-grid > *, .mini-grid > * { min-width: 0; }
 .mini-title { font-size: 12px; color: var(--text-secondary); margin-bottom: 2px; }
 
+/* Where to act */
+.overview ul { margin: 0; padding-left: 18px; }
+.overview li { margin-bottom: 4px; }
+.findings-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 14px; }
+.findings-grid > * { min-width: 0; }
+.finding .head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.finding h4 { font-size: 13px; margin: 12px 0 4px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.04em; }
+.finding ul { margin: 0; padding-left: 18px; font-size: 14px; }
+.finding li { margin-bottom: 4px; }
+.finding .actions li { font-weight: 500; }
+.state { font-size: 12px; font-weight: 600; padding: 2px 8px; border-radius: 999px; border: 1px solid var(--border); white-space: nowrap; }
+.state.on-track     { background: color-mix(in srgb, var(--status-good) var(--tint), var(--surface-1)); }
+.state.watch        { background: color-mix(in srgb, var(--status-warning) var(--tint), var(--surface-1)); }
+.state.needs-action { background: color-mix(in srgb, var(--status-critical) var(--tint), var(--surface-1)); }
+@media (max-width: 960px) { .findings-grid { grid-template-columns: 1fr; } }
+
 /* Methods */
 .methods .card h3 { margin-bottom: 4px; }
 .methods dl { margin: 8px 0 0; display: grid; grid-template-columns: auto 1fr; gap: 2px 10px; font-size: 13px; }
@@ -259,6 +275,15 @@ footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--grid);
     <table class="scorecard" id="scorecard" aria-label="Scorecard by department"></table>
     <p class="small muted" id="scorecardKey" style="margin:10px 8px 0"></p>
   </div>
+</section>
+
+<section>
+  <div class="section-head">
+    <h2>Where to act</h2>
+    <p>Written automatically from the scorecard by fixed rules: every sentence quotes the numbers behind it, and every recommendation comes from the project's playbook of bank-practice actions.</p>
+  </div>
+  <div class="card overview"><ul id="overview"></ul></div>
+  <div class="findings-grid" id="findings"></div>
 </section>
 
 <section>
@@ -389,6 +414,22 @@ $("footOrg").textContent = M.organization;
   $("scorecardKey").textContent =
     `Thresholds. Reach: ${k(T.reach)}. Readiness: ${k(T.readiness)}. Adoption: ${k(T.adoption)}, and red if under ${T.adoption.minimum_use_gate}% meet the 1-prompt minimum. ` +
     `Outcomes: ${k(T.outcomes)} improvement. Anything below amber is red. Low-response caution below ${T.readiness.low_response_rate}% survey response.`;
+})();
+
+// ---------- where to act ----------
+(function renderFindings() {
+  $("overview").innerHTML = DATA.overview.map((l) => `<li>${esc(l)}</li>`).join("");
+  const list = (title, items, cls = "") => items.length
+    ? `<h4>${title}</h4><ul class="${cls}">${items.map((i) => `<li>${esc(i)}</li>`).join("")}</ul>` : "";
+  $("findings").innerHTML = DATA.findings.map((f) => `
+    <div class="card finding">
+      <div class="head"><h3>${esc(f.department)}</h3>
+        <span class="state ${f.status.toLowerCase().replace(" ", "-")}">${esc(f.status)}</span></div>
+      ${list("What isn't working", f.problems)}
+      ${list("Watch", f.watch)}
+      ${list("What's working", f.strengths)}
+      ${list("Recommended next actions", f.actions, "actions")}
+    </div>`).join("");
 })();
 
 // ---------- methods ----------

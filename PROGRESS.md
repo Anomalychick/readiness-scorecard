@@ -148,8 +148,17 @@ readiness-scorecard/
 - [x] Committed (Branch Ops borderline left as is)
 
 ### Step 6: Findings summary
-- [ ] Rule-based write-up: where it's working, where it isn't, recommended next action per department
-- Check: every statement traces back to a number on the dashboard
+- [x] Playbook added to `rollout_config.toml` from Audrey's choices: late training → protected training time +
+      manager accountability (weekly list before deadline); low confidence/box-checking → role-specific use cases;
+      use without results → review how it's used; low survey response → manager follow-up.
+      Drafted by Claude Code, approved by Audrey: below minimum use → managers get list of 0-prompt employees;
+      on track → share what's working. Late-training actions apply to any non-green reach (approved).
+- [x] `src/write_summary.py`: fixed rules read only metric views (never the planted pattern); every sentence quotes
+      its numbers; status = On track / Watch / Needs action; amber measures get a "Watch" line
+- [x] Output: `output/findings_summary.md` + "Where to act" section on the dashboard (same rules, same text)
+- [x] 13 summary tests (every action from the playbook, every non-green measure explained, every sentence has a
+      number, planted stories detected); 72 tests pass
+- [x] Audrey reviewed and approved; committed
 
 ### Step 7: README + GitHub
 - [ ] README: business problem, the four measures and how each is calculated, how to run, synthetic-data notice
@@ -202,6 +211,7 @@ readiness-scorecard/
 - 2026-11-21: Step 3 done: SQLite database + SQL metric views; scorecard matches planned colors; hand check passed
 - 2026-11-21: Step 4 done: 55 pytest tests; Audrey ran them and confirmed they catch a deliberate threshold change
 - 2026-11-21: Step 5 done: HTML dashboard + run_all.py; outcome thresholds lowered to 7.5 / 2.5; 59 tests pass
+- 2026-11-21: Step 6 done: rule-based findings summary + "Where to act" on dashboard; playbook from Audrey; 72 tests pass
 
 ## Next
-- Step 6: findings summary (and add it to the dashboard)
+- Step 7: README + GitHub
