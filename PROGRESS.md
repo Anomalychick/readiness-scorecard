@@ -167,10 +167,9 @@ readiness-scorecard/
       how it's built, how to run, structure, synthetic-data notice, credit (GITHUB_USERNAME placeholder)
 - [x] docs/scorecard-preview.png (README image); index.html at root redirects Pages visitors to the dashboard
 - [x] `[project]` author + github_username in settings; dashboard credit reads from it (72 tests pass)
-- [ ] Audrey creates GitHub account → fill in username (README + settings) → commit
-- [ ] Create empty public repo `readiness-scorecard` on github.com → `git remote add` → `git push`
-      (Git Credential Manager opens a browser to sign in)
-- [ ] Turn on GitHub Pages (Settings → Pages → Deploy from branch → main / root); check the live link
+- [x] Audrey created GitHub account (Anomalychick) → username filled in (README + settings) → committed
+- [x] Created public repo github.com/Anomalychick/readiness-scorecard → `git remote add` → Audrey pushed
+- [x] GitHub Pages on (main / root); live at https://anomalychick.github.io/readiness-scorecard/ (checked)
 
 ### Stretch (only if time allows)
 - [ ] AI theme sorting for open-ended comments, with a human-reviewed validation sample
@@ -221,6 +220,9 @@ readiness-scorecard/
 - 2026-11-21: Step 5 done: HTML dashboard + run_all.py; outcome thresholds lowered to 7.5 / 2.5; 59 tests pass
 - 2026-11-21: Step 6 done: rule-based findings summary + "Where to act" on dashboard; playbook from Audrey; 72 tests pass
 
+- 2026-11-21: Step 7 done: README + preview + Pages entry point; pushed to GitHub; live dashboard on GitHub Pages
+
 ## Next
-- Audrey: create GitHub account, send username
-- Then: fill in username, commit, create repo, push, turn on Pages
+- Audrey: click through the live dashboard (and on a phone) and note anything to fix
+- Resume entry for the v36 masters (only now that the project is done; no "I/she/her"; never claim Codex)
+- Optional: hand check 2 (Lending heavy users 17 ÷ 89); stretch goals above
